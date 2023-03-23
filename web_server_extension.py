@@ -14,7 +14,11 @@ class ExtendedHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
-        response = """
+        response = self.get_extended_page()
+        self.wfile.write(response.encode())
+
+    def get_extended_page(self):
+        return """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,7 +40,6 @@ class ExtendedHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 </body>
 </html>
 """
-        self.wfile.write(response.encode())
 
 def run(server_class=http.server.HTTPServer, handler_class=ExtendedHTTPRequestHandler):
     PORT = 8000
