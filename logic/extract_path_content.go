@@ -1,13 +1,15 @@
 package logic
 
-import "strings"
+import (
+	"strings"
+)
 
 type PathContent struct {
 	Path    string
 	Content string
 }
 
-func ExtractPathsAndContents(input string) ([]PathContent, error) {
+func ExtractPathsAndContents(input string, dist string) ([]PathContent, error) {
 	lines := strings.Split(input, "\n")
 	var pathContents []PathContent
 
@@ -24,6 +26,9 @@ func ExtractPathsAndContents(input string) ([]PathContent, error) {
 				currentContentLines = nil
 			}
 			currentPath = strings.TrimSpace(line[5:])
+			if !strings.Contains(currentPath, dist) {
+				currentPath = dist + currentPath
+			}
 		} else if strings.HasPrefix(line, "CONTENT:") {
 			currentContentLines = append(currentContentLines, strings.TrimSpace(line[8:]))
 		} else {

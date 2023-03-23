@@ -3,6 +3,7 @@ package logic
 import (
 	"fmt"
 	"os"
+	"os/exec"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/maniizu3110/replace/logic/util.go"
@@ -33,14 +34,24 @@ func Clone(repositoryUrl string, isPrivate bool) {
 	fmt.Println("Repository cloned successfully")
 }
 
-func Add() {
-	return
-}
+func GitAddCommitPush(dir string) error {
+	cmd := exec.Command("git", "add", ".")
+	cmd.Dir = dir
+	if output, err := cmd.CombinedOutput(); err != nil {
+		return fmt.Errorf("git add error: %v, output: %s", err, string(output))
+	}
 
-func Commit() {
-	return
-}
+	cmd = exec.Command("git", "commit", "-m", "auto commit")
+	cmd.Dir = dir
+	if output, err := cmd.CombinedOutput(); err != nil {
+		return fmt.Errorf("git commit error: %v, output: %s", err, string(output))
+	}
 
-func Push() {
-	return
+	cmd = exec.Command("git", "push")
+	cmd.Dir = dir
+	if output, err := cmd.CombinedOutput(); err != nil {
+		return fmt.Errorf("git push error: %v, output: %s", err, string(output))
+	}
+
+	return nil
 }

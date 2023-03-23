@@ -31,8 +31,8 @@ func CallGPT4(messages []string) ([]string, error) {
 		}
 	}
 	userMessages = append([]map[string]string{{"role": "system", "content": systemMessage}}, userMessages...)
-	fmt.Println(userMessages)
 
+	fmt.Println(userMessages)
 	requestPayload := map[string]interface{}{
 		"model":             "gpt-4",
 		"messages":          userMessages,
@@ -53,13 +53,16 @@ func CallGPT4(messages []string) ([]string, error) {
 
 	client := &http.Client{}
 	req, err := http.NewRequest(method, url, payload)
-
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
 
 	key := os.Getenv("OPEN_API_KEY")
+	if key == "" {
+		fmt.Println("OPEN_API_KEY is not set")
+		return nil, err
+	}
 	authorization := "Bearer " + key
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", authorization)
@@ -75,7 +78,6 @@ func CallGPT4(messages []string) ([]string, error) {
 		fmt.Println(err)
 		return nil, err
 	}
-	// fmt.Println(string(body))
 
 	var cc ChatCompletion
 	err = json.Unmarshal(body, &cc)
@@ -84,7 +86,6 @@ func CallGPT4(messages []string) ([]string, error) {
 		return nil, err
 	}
 
-	// Choicesの数分だけの[]stringを返すように変更する
 	contents := make([]string, len(cc.Choices))
 	for _, choice := range cc.Choices {
 		contents = append(contents, choice.Message.Content)
