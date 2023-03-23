@@ -7,7 +7,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/maniizu3110/replace/logic"
-	"github.com/maniizu3110/replace/logic/util.go"
+	"github.com/maniizu3110/replace/logic/util"
 	"github.com/sirupsen/logrus"
 )
 
