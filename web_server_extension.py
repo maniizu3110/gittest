@@ -6,10 +6,15 @@ import socketserver
 class ExtendedHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path == "/extended":
-            self.send_response(200)
-            self.send_header("Content-type", "text/html")
-            self.end_headers()
-            response = """
+            self.send_extended_response()
+        else:
+            super().do_GET()
+
+    def send_extended_response(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+        response = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,9 +36,7 @@ class ExtendedHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 </body>
 </html>
 """
-            self.wfile.write(response.encode())
-        else:
-            super().do_GET()
+        self.wfile.write(response.encode())
 
 def run(server_class=http.server.HTTPServer, handler_class=ExtendedHTTPRequestHandler):
     PORT = 8000
